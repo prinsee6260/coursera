@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -21,15 +22,27 @@ public class WebSecurity {
     }
 
     @Bean
-    protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // telling security to don't check the below urls
-        return http.authorizeRequests().mvcMatchers("/login","/authenticate").permitAll().
-                // telling to check all urls
-                and().authorizeRequests().anyRequest().authenticated().
-                // setting login  page and authentication
-                and().userDetailsService(userDetailService).formLogin().loginPage("/login").failureForwardUrl("/login?error")
-                .defaultSuccessUrl("/home",true).loginProcessingUrl("/authenticate").and().build();
+        http.authorizeRequests().mvcMatchers("/login","/authenticate").permitAll();
 
+        // telling to check all urls
+        http.authorizeRequests().anyRequest().authenticated();
+
+        // setting login  page and authentication
+        http.userDetailsService(userDetailService).formLogin().loginPage("/login").loginProcessingUrl("/authenticate")
+                .failureForwardUrl("/login?error")
+                .defaultSuccessUrl("/home",true);
+
+        return http.build();
 
     }
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+
+
 }

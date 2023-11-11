@@ -1,15 +1,15 @@
 INSERT INTO TBL_USER(ID,USER_NAME,PASSWORD,EMAIL,ROLE) VALUES(
-1001,'PrinseeJii','admin@123','prinsee@gmail.com','ADMIN'
+1001,'PrinseeJii','$2y$10$9tsmOp.1KV5XKY8mhNSLherFbWw/P4WKLwGmAKIM9AFyo9hmWMTba','prinsee@gmail.com','ADMIN'
 );
 INSERT INTO TBL_USER(ID,USER_NAME,PASSWORD,EMAIL,ROLE) VALUES(
-1002,'Vaibhav','admin@123','vaibhav@gmail.com','ADMIN'
+1002,'Vaibhav','$2y$10$9tsmOp.1KV5XKY8mhNSLherFbWw/P4WKLwGmAKIM9AFyo9hmWMTba','vaibhav@gmail.com','ADMIN'
 );
 INSERT INTO TBL_USER(ID,USER_NAME,PASSWORD,EMAIL,ROLE) VALUES(
-1003,'Anshul','admin@123','anshul@gmail.com','ADMIN'
+1003,'Anshul','$2y$10$9tsmOp.1KV5XKY8mhNSLherFbWw/P4WKLwGmAKIM9AFyo9hmWMTba','anshul@gmail.com','ADMIN'
 );
 INSERT INTO TBL_USER(ID,USER_NAME,PASSWORD,EMAIL,ROLE) VALUES(
-1004,'Maa','admin@123','maa@gmail.com','ADMIN'
+1004,'Maa','$2y$10$9tsmOp.1KV5XKY8mhNSLherFbWw/P4WKLwGmAKIM9AFyo9hmWMTba','maa@gmail.com','ADMIN'
 );
 INSERT INTO TBL_USER(ID,USER_NAME,PASSWORD,EMAIL,ROLE) VALUES(
-1005,'Paa','admin@123','paa@gmail.com','ADMIN'
+1005,'Paa','$2y$10$9tsmOp.1KV5XKY8mhNSLherFbWw/P4WKLwGmAKIM9AFyo9hmWMTba','paa@gmail.com','ADMIN'
 );
