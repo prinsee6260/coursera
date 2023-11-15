@@ -20,7 +20,11 @@ public class AuthenticatedUser extends org.springframework.security.core.userdet
 
     public static Collection<GrantedAuthority> getAuthorities(User user) {
         Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_"+user.getRole().toString()));
+        try {
+            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().toString()));
+        }catch (Exception e){
+            throw new IllegalArgumentException();
+        }
         return grantedAuthorities;
     }
 
