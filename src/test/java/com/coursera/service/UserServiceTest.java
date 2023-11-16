@@ -81,4 +81,30 @@ class UserServiceTest {
         assertNotEquals(user1.getPassword(),user.getPassword());
     }
 
+    @Test
+    void getUserWithMockedData() {
+        Optional<User> userOptional = Optional.of(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.STUDENT));
+        when(userRepository.findByUserName(Mockito.any())).thenReturn(userOptional);
+        User user = userService.getUser("Vaibhav");
+        assertNotNull(user);
+        assertEquals(user.getUserName(),userOptional.get().getUserName());
+    }
+
+    @Test
+    void getUserWithEmpty() {
+        assertThrows(UsernameNotFoundException.class,() -> userService.getUser(""));
+    }
+    @Test
+    void getUserWithNull() {
+        assertThrows(UsernameNotFoundException.class,() -> userService.getUser((String) null));
+    }
+    @Test
+    void deleteUser() {
+        assertDoesNotThrow(() -> userService.deleteUser(Optional.of(BigDecimal.ONE)));
+    }
+
+    @Test
+    void deleteUserExceptionScenario() {
+        assertThrows(IllegalArgumentException.class,() -> userService.deleteUser(Optional.empty()));
+    }
 }
