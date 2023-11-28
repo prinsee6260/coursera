@@ -37,10 +37,11 @@ class HomeControllerTest {
     private UserRepository userRepository;
 
     @Test
+    @WithAnonymousUser
     void loginPage() throws Exception {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/login"))
-                .andExpect(MockMvcResultMatchers.status().isOk()).
-                andReturn();
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                        .andReturn();
     }
 
     @Test

@@ -1,0 +1,42 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+      lang="EN">
+<head>
+    <title>Courses</title>
+</head>
+<body>
+<div layout:fragment="content" class="container-fluid">
+    <h1>Course List</h1>
+    <a th:href="@{/courses/create}" class="m-2 btn btn-outline-info">Create</a>
+
+    <div class="row row-cols-3 row-cols-md-3 g-4">
+        <div class="col" th:each="course, i : ${courses}">
+             <div class="card bg-outline-primary" style="width: 18rem;">
+                 <div class="card-body">
+                     <button class="btn" type="button" data-bs-toggle="offcanvas" th:data-bs-target="${'#collapse'+i.index}" th:aria-controls="${'collapse'+i.index}">
+                         <p class="text-start card-title" th:text="${course.name}">Card title</p>
+                         <p class="text-start card-subtitle text-muted" th:text="${course.category}">Card subtitle</p>
+                     </button>
+                     <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" th:id="${'collapse'+i.index}" aria-labelledby="offcanvasWithBothOptionsLabel">
+                         <div class="offcanvas-header">
+                             <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel" th:text="${course.name}"></h5>
+                             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                         </div>
+                         <div class="offcanvas-body">
+                             <p th:text="${course.description}">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="card-footer">
+                     <a href="#" class="btn btn-outline-success">Enroll</a>
+                 </div>
+             </div>
+         </div>
+    </div>
+    <br>
+    <a class="link-danger" th:href="@{/home}">Go Back To Home</a>
+</div>
+</body>
+</html>

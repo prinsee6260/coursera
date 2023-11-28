@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequestMapping("/users")
 public class UserController {
 
-    private static String USER_FOLDER = "user/";
+    private static final String USER_FOLDER = "user/";
 
     private final UserService userService;
 
