@@ -31,7 +31,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@WebMvcTest
+@WebMvcTest(UserController.class)
 class UserControllerTest {
 
     @Autowired
