@@ -107,4 +107,7 @@ class UserServiceTest {
     void deleteUserExceptionScenario() {
         assertThrows(IllegalArgumentException.class,() -> userService.deleteUser(Optional.empty()));
     }
+
+
+
 }

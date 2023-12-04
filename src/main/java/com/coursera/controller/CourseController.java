@@ -6,10 +6,10 @@ import com.coursera.service.CourseService;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/courses")
@@ -33,6 +33,13 @@ public class CourseController {
     @GetMapping("/create")
     public String getCoursesCreatePage(Model model){
         model.addAttribute("course",new Course());
+        return COURSE_FOLDER + "course";
+    }
+
+    @GetMapping("/{id}/update")
+    public String getCoursesUpdatePage(Model model,
+                                       @PathVariable Optional<BigDecimal> id){
+        model.addAttribute("course",courseService.getCourse(id));
         return COURSE_FOLDER + "course";
     }
 

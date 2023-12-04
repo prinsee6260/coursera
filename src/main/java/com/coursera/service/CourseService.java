@@ -1,11 +1,14 @@
 package com.coursera.service;
 
+import com.coursera.exception.CourseNotFoundException;
 import com.coursera.model.Course;
 import com.coursera.model.User;
 import com.coursera.repository.CourseRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CourseService {
@@ -20,7 +23,12 @@ public class CourseService {
         return courseRepository.findAll();
     }
 
-    public void saveCourse(Course course) {
-        courseRepository.save(course);
+    public Course saveCourse(Course course) {
+        return courseRepository.save(course);
+    }
+
+    public Course getCourse(Optional<BigDecimal> id) {
+        return courseRepository.findById(id.orElseThrow(IllegalArgumentException::new))
+                .orElseThrow(() -> new CourseNotFoundException("Course not found with "+id.get()));
     }
 }

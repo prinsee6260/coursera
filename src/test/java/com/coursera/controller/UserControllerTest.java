@@ -1,6 +1,7 @@
 package com.coursera.controller;
 
 import com.coursera.model.User;
+import com.coursera.security.AuthenticatedUser;
 import com.coursera.service.UserService;
 import com.coursera.util.Role;
 import org.junit.jupiter.api.Assertions;
@@ -15,9 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -25,6 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
@@ -32,6 +36,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(UserController.class)
+@WithMockUser(username="admin",roles={"USER","ADMIN"})
 class UserControllerTest {
 
     @Autowired
@@ -52,7 +57,6 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles={"ADMIN"})
     void getUsersPage() throws Exception {
         BDDMockito.given(userService.getUsers()).willReturn(userList);
         MvcResult users = mockMvc.perform(MockMvcRequestBuilders.get(URI.create("/users")))
@@ -63,7 +67,6 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles={"ADMIN"})
     void getUserDetailsPage() throws Exception {
         mock = new User(BigDecimal.ONE, "user1", "user1@gmail.com", "pwd1", Role.STUDENT);
         BDDMockito.given(userService.getUser(Optional.ofNullable(BDDMockito.any()))).willReturn(mock);
@@ -76,7 +79,6 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles={"ADMIN"})
     void getUserDetailsPageException() throws Exception {
         BDDMockito.given(userService.getUser(Optional.ofNullable(BDDMockito.any()))).willThrow(UsernameNotFoundException.class);
         MvcResult users = mockMvc.perform(MockMvcRequestBuilders.get(URI.create("/users/2.0")))
@@ -86,7 +88,6 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles={"ADMIN"})
     void createUserPage() throws Exception {
         MvcResult users = mockMvc.perform(MockMvcRequestBuilders.get(URI.create("/users/create")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -95,7 +96,6 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles={"ADMIN"})
     void updateUserPage() throws Exception {
         mock = new User(BigDecimal.ONE, "user1", "user1@gmail.com", "pwd1", Role.STUDENT);
         BDDMockito.given(userService.getUser(Optional.ofNullable(BDDMockito.any()))).willReturn(mock);
@@ -107,7 +107,6 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles={"ADMIN"})
     void updateUserPageExec() throws Exception {
         BDDMockito.given(userService.getUser(Optional.ofNullable(BDDMockito.any()))).willThrow(UsernameNotFoundException.class);
         MvcResult users = mockMvc.perform(MockMvcRequestBuilders.get(URI.create("/users/2.0/update")))
@@ -117,7 +116,6 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", roles={"ADMIN"})
     void deleteUser() throws Exception {
         MvcResult users = mockMvc.perform(MockMvcRequestBuilders.get(URI.create("/users/1.0/delete")))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
@@ -126,16 +124,20 @@ class UserControllerTest {
     }
 
 
-    @WithMockUser(username = "admin",authorities = {"ROLE_ADMIN"})
+    @Test
     void saveUser() throws Exception {
         MvcResult users = mockMvc.perform(MockMvcRequestBuilders.post("/users")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf().asHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{" +
                                 "\"id\":\"\"," +
                                 "\"userName\":\"Vaibhav\", \"email\":\"v@gmail.com\"," +
                                 "\"role\":\"STUDENT\"" +
-                                "}"))
+                                "}")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/users"))
                 .andReturn();
     }
+
 }

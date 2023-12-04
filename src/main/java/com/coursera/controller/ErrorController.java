@@ -1,5 +1,6 @@
 package com.coursera.controller;
 
+import com.coursera.exception.CourseNotFoundException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.ui.Model;
@@ -16,8 +17,8 @@ public class ErrorController {
         return "error";
     }
 
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public String useNotFoundExe(Model model,UsernameNotFoundException e){
+    @ExceptionHandler({UsernameNotFoundException.class, CourseNotFoundException.class})
+    public String notFoundExe(Model model,Exception e){
         model.addAttribute("message",e.getMessage());
         return "error";
     }

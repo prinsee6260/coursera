@@ -1,5 +1,6 @@
 package com.coursera.controller;
 
+import com.coursera.exception.CourseNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -22,12 +23,20 @@ class ErrorControllerTest {
     }
 
     @Test
-    void useNotFoundExe() {
+    void notFoundExe() {
         String usernameNotFoundExe = "Username not found exe";
         Model mock = Mockito.mock(Model.class);
-        String exceptionMsg = errorController.useNotFoundExe(mock,new UsernameNotFoundException(
+        String exceptionMsg = errorController.notFoundExe(mock,new UsernameNotFoundException(
                 usernameNotFoundExe));
         assertEquals("error",exceptionMsg);
+    }
 
+    @Test
+    void courseNotFoundExe() {
+        String usernameNotFoundExe = "Course not found exe";
+        Model mock = Mockito.mock(Model.class);
+        String exceptionMsg = errorController.notFoundExe(mock,new CourseNotFoundException(
+                usernameNotFoundExe));
+        assertEquals("error",exceptionMsg);
     }
 }

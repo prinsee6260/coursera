@@ -7,7 +7,9 @@ import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -22,6 +24,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(CourseController.class)
+@WithMockUser(username = "Vaibhav",authorities = "ADMIN")
 class CourseControllerTest {
 
     @Autowired
@@ -31,7 +34,6 @@ class CourseControllerTest {
     private CourseService courseService;
 
     @Test
-    @WithMockUser(username = "Vaibhav")
     void getCoursesPage() throws Exception {
         MvcResult courses = mockMvc.perform(MockMvcRequestBuilders.get("/courses"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -53,5 +55,40 @@ class CourseControllerTest {
                         "courses"))
                 .andReturn();
         assertIterableEquals(expectedCourses, (Iterable<?>) courses.getModelAndView().getModel().get("courses"));
+    }
+
+    @Test
+    void getCoursesCreatePage() throws Exception {
+        MvcResult courses = mockMvc.perform(MockMvcRequestBuilders.get("/courses/create"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists(
+                        "course"))
+                .andReturn();
+        assertNull(((Course) courses.getModelAndView().getModel().get("course")).getId());
+    }
+
+    //@Test
+    void getCoursesUpdatePage() throws Exception {
+        MvcResult courses = mockMvc.perform(MockMvcRequestBuilders.get("/courses/1.0/update"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists(
+                        "message"))
+                .andReturn();
+    }
+
+    @Test
+    void saveCourse() throws Exception {
+        MvcResult users = mockMvc.perform(MockMvcRequestBuilders.post("/courses")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf().asHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{" +
+                                "\"id\":\"\"," +
+                                "\"name\":\"Vaibhav\", \"description\":\"v@gmail.com\"," +
+                                "\"category\":\"STUDENT\"" +
+                                "}")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/courses"))
+                .andReturn();
     }
 }
