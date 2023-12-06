@@ -1,5 +1,6 @@
 package com.coursera.controller;
 
+import com.coursera.exception.CourseNotFoundException;
 import com.coursera.model.Course;
 import com.coursera.service.CourseService;
 import org.junit.jupiter.api.Test;
@@ -16,15 +17,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(CourseController.class)
-@WithMockUser(username = "Vaibhav",authorities = "ADMIN")
+@WithMockUser(username = "Vaibhav", authorities = "ADMIN")
 class CourseControllerTest {
 
     @Autowired
@@ -47,7 +45,7 @@ class CourseControllerTest {
     @WithMockUser(username = "Vaibhav")
     void getCoursesPageWithData() throws Exception {
         List<Course> expectedCourses = new ArrayList<>();
-        expectedCourses.add(new Course(BigDecimal.ONE,"Category 1","Course 1","Description 1"));
+        expectedCourses.add(new Course(BigDecimal.ONE, "Category 1", "Course 1", "Description 1"));
         BDDMockito.given(courseService.getCourses()).willReturn(expectedCourses);
         MvcResult courses = mockMvc.perform(MockMvcRequestBuilders.get("/courses"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -67,12 +65,22 @@ class CourseControllerTest {
         assertNull(((Course) courses.getModelAndView().getModel().get("course")).getId());
     }
 
-    //@Test
+    @Test
     void getCoursesUpdatePage() throws Exception {
+        BDDMockito.given(courseService.getCourse(BDDMockito.any(Optional.class))).willThrow(CourseNotFoundException.class);
         MvcResult courses = mockMvc.perform(MockMvcRequestBuilders.get("/courses/1.0/update"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists(
-                        "message"))
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+                .andExpect(MockMvcResultMatchers.view().name("error"))
+                .andReturn();
+    }
+
+    @Test
+    void getCoursesUpdatePageWithCorrectResponse() throws Exception {
+        BDDMockito.given(courseService.getCourse(BDDMockito.any(Optional.class))).willReturn(
+                new Course(BigDecimal.ONE, "Category 1", "Course 1", "Description 1"));
+        MvcResult courses = mockMvc.perform(MockMvcRequestBuilders.get("/courses/1.0/update"))
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+                .andExpect(MockMvcResultMatchers.view().name("course/course"))
                 .andReturn();
     }
 
@@ -91,4 +99,5 @@ class CourseControllerTest {
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/courses"))
                 .andReturn();
     }
+
 }
