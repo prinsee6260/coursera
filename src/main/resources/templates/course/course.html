@@ -24,9 +24,13 @@
             <label for="category">Category</label>
           </div>
           <div class="form-floating m-3">
-            <textarea class="form-control" id="description" placeholder="Description" th:field="*{description}">
+            <textarea class="form-control" id="description" placeholder="Description" style="height: 200px;" th:field="*{description}">
             </textarea>
             <label for="description">Description</label>
+          </div>
+          <div class="form-floating m-3">
+            <input class="form-control" id="link" type="url" placeholder="Link" th:field="*{link}">
+            <label for="link">Link</label>
           </div>
           <button type="submit" class="btn btn-outline-success">Submit</button>
         </form>
