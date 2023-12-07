@@ -51,7 +51,7 @@ public class CourseController {
         return "redirect:/courses";
     }
 
-    @GetMapping("{id}/enroll")
+    @GetMapping("/{id}/enroll")
     @Secured("ROLE_STUDENT")
     public String enrollCourse(Model model,@PathVariable Optional<BigDecimal> id){
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
