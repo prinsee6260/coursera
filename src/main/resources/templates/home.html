@@ -8,8 +8,44 @@
     <title>Home</title>
 </head>
 <body>
-        <div layout:fragment="content" class="container-fluid">
-            <h4>Welcome&nbsp;<span sec:authentication="name"></span></h4>
+<div layout:fragment="content" class="container-fluid">
+    <h4>Welcome&nbsp;<span sec:authentication="name"></span></h4>
+    <div th:if="${!#lists.isEmpty(courses)}">
+        <hr>
+        <h5>Enrolled Courses</h5>
+        <div class="row row-cols-3 row-cols-md-3 g-4">
+            <div class="col" th:each="course, i : ${courses}">
+                <div class="card bg-outline-primary" style="width: 18rem;">
+                    <div class="card-body">
+                        <button class="btn" type="button" data-bs-toggle="offcanvas"
+                                th:data-bs-target="${'#collapse'+i.index}" th:aria-controls="${'collapse'+i.index}">
+                            <p class="text-start card-title" th:text="${course.name}">Card title</p>
+                            <p class="text-start card-subtitle text-muted" th:text="${course.category}">Card
+                                subtitle</p>
+                        </button>
+                        <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1"
+                             th:id="${'collapse'+i.index}" aria-labelledby="offcanvasWithBothOptionsLabel">
+                            <div class="offcanvas-header">
+                                <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel"
+                                    th:text="${course.name}"></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                <p th:text="${course.description}">Some quick example text to build on the card title
+                                    and make up the bulk of the card's content.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a th:href="@{${course.link}}" target="_blank" class="btn btn-outline-success">Open</a>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+</div>
+
+
 </body>
 </html>

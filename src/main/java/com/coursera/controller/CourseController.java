@@ -56,7 +56,7 @@ public class CourseController {
     public String enrollCourse(Model model,@PathVariable Optional<BigDecimal> id){
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         courseService.enrollCourse(userName,id);
-        return "redirect:/courses";
+        return "redirect:/home";
     }
 
 }

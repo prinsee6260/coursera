@@ -45,7 +45,7 @@ class CourseControllerTest {
     @WithMockUser(username = "Vaibhav")
     void getCoursesPageWithData() throws Exception {
         List<Course> expectedCourses = new ArrayList<>();
-        expectedCourses.add(new Course(BigDecimal.ONE, "Category 1", "Course 1", "Description 1"));
+        expectedCourses.add(new Course(BigDecimal.ONE, "Category 1", "Course 1", "Description 1",null));
         BDDMockito.given(courseService.getCourses()).willReturn(expectedCourses);
         MvcResult courses = mockMvc.perform(MockMvcRequestBuilders.get("/courses"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -77,7 +77,7 @@ class CourseControllerTest {
     @Test
     void getCoursesUpdatePageWithCorrectResponse() throws Exception {
         BDDMockito.given(courseService.getCourse(BDDMockito.any(Optional.class))).willReturn(
-                new Course(BigDecimal.ONE, "Category 1", "Course 1", "Description 1"));
+                new Course(BigDecimal.ONE, "Category 1", "Course 1", "Description 1",null));
         MvcResult courses = mockMvc.perform(MockMvcRequestBuilders.get("/courses/1.0/update"))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
                 .andExpect(MockMvcResultMatchers.view().name("course/course"))

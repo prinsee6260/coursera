@@ -27,4 +27,6 @@ public class Course {
     @Lob
     private String description;
 
+    private String link;
+
 }

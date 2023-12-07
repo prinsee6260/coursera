@@ -48,3 +48,4 @@ INSERT INTO TBL_COURSE(ID, NAME, DESCRIPTION, CATEGORY) VALUES
 (1016, 'Artificial Intelligence Applications', 'Explores real-world applications of artificial intelligence in industries such as healthcare, finance, gaming, and autonomous systems. Participants will analyze case studies and develop AI-driven solutions.', 'technology');
 
 
+UPDATE TBL_COURSE SET LINK = 'https://www.youtube.com/watch?v=tljuDMmfJz8';

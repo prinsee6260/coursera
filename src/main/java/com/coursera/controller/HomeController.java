@@ -25,7 +25,8 @@ public class HomeController {
 
     @GetMapping("/home")
     @Secured({"ROLE_ADMIN","ROLE_STUDENT"})
-    public String homePage(){
+    public String homePage(Model model){
+        model.addAttribute("courses",userService.getEnrolledCourses());
         return "home";
     }
 

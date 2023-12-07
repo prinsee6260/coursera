@@ -1,7 +1,12 @@
 package com.coursera.service;
 
+import com.coursera.model.Course;
 import com.coursera.model.User;
+import com.coursera.model.UserCourseDtl;
+import com.coursera.repository.CourseRepository;
+import com.coursera.repository.UserCourseDtlRepository;
 import com.coursera.repository.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +19,14 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    private final UserCourseDtlRepository userCourseDtlRepository;
+
+    private final CourseRepository courseRepository;
+
+    public UserService(UserRepository userRepository, UserCourseDtlRepository userCourseDtlRepository, CourseRepository courseRepository) {
         this.userRepository = userRepository;
+        this.userCourseDtlRepository = userCourseDtlRepository;
+        this.courseRepository = courseRepository;
     }
 
     public List<User> getUsers(){
@@ -38,5 +49,12 @@ public class UserService {
 
     public void deleteUser(Optional<BigDecimal> id) {
         userRepository.deleteById(id.orElseThrow(IllegalArgumentException::new));
+    }
+
+    public List<Course> getEnrolledCourses(){
+        User user = getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        List<UserCourseDtl> userCourseDtls = userCourseDtlRepository.findByUserId(user.getId());
+        List<BigDecimal> list = userCourseDtls.stream().map(UserCourseDtl::getCourseId).toList();
+        return courseRepository.findAllById(list);
     }
 }
