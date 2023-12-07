@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -54,7 +55,7 @@ public class UserService {
     public List<Course> getEnrolledCourses(){
         User user = getUser(SecurityContextHolder.getContext().getAuthentication().getName());
         List<UserCourseDtl> userCourseDtls = userCourseDtlRepository.findByUserId(user.getId());
-        List<BigDecimal> list = userCourseDtls.stream().map(UserCourseDtl::getCourseId).toList();
+        List<BigDecimal> list = userCourseDtls.stream().map(UserCourseDtl::getCourseId).collect(Collectors.toList());
         return courseRepository.findAllById(list);
     }
 }
