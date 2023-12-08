@@ -6,7 +6,10 @@ import com.coursera.model.User;
 import com.coursera.model.UserCourseDtl;
 import com.coursera.repository.CourseRepository;
 import com.coursera.repository.UserCourseDtlRepository;
+import com.coursera.security.AuthenticatedUser;
+import com.coursera.util.Role;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -35,9 +38,15 @@ public class CourseService {
 
     public List<Course> getCourses(){
         log.debug("getCourses");
-        List<Course> all = courseRepository.findAll();
+        List<Course> courseList = null;
+        AuthenticatedUser user = (AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(user.getUser().getRole().equals(Role.STUDENT)){
+            courseList = courseRepository.findByActiveTrue();
+        }else {
+            courseList = courseRepository.findAll();
+        }
         log.debug("getCourses ended");
-        return all;
+        return courseList;
     }
 
     public Course saveCourse(Course course) {
@@ -71,5 +80,11 @@ public class CourseService {
         }
         log.debug("enrollCourse ended");
 
+    }
+
+    public void activateCourse(Optional<BigDecimal> id) {
+        Course course = getCourse(id);
+        course.setActive(!course.getActive());
+        courseRepository.save(course);
     }
 }

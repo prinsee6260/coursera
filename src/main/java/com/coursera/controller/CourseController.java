@@ -67,4 +67,10 @@ public class CourseController {
         return "redirect:/home";
     }
 
+    @GetMapping("/{id}/activate")
+    public String activateCourse(Model model,@PathVariable Optional<BigDecimal> id){
+        courseService.activateCourse(id);
+        return "redirect:/courses";
+    }
+
 }

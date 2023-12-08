@@ -48,24 +48,24 @@ class CourseServiceTest {
 
     @Test
     void saveCourse() {
-        Course mockCourse = new Course(BigDecimal.ONE,"cat1","Vname", "Desc","");
+        Course mockCourse = new Course(BigDecimal.ONE,"cat1","Vname", "Desc","",true);
         when(courseRepository.save(Mockito.any(Course.class))).thenReturn(mockCourse);
-        Course course = new Course(null,"cat1","Vname", "Desc","");
+        Course course = new Course(null,"cat1","Vname", "Desc","",true);
         Course course1 = courseService.saveCourse(course);
         assertNotNull(course1.getId());
     }
 
     @Test
     void saveCourseUpdate() {
-        Course mockCourse = new Course(BigDecimal.ONE,"cat1","Vname1", "Desc","");
+        Course mockCourse = new Course(BigDecimal.ONE,"cat1","Vname1", "Desc","",true);
         when(courseRepository.save(Mockito.any(Course.class))).thenReturn(mockCourse);
-        Course course = new Course(null,"cat1","Vname", "Desc","");
+        Course course = new Course(null,"cat1","Vname", "Desc","",true);
         Course course1 = courseService.saveCourse(course);
         assertNotEquals(course.getName(),course1.getName());
     }
     @Test
     void getCourse() {
-        Optional<Course> courseOptional = Optional.of(new Course(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest",""));
+        Optional<Course> courseOptional = Optional.of(new Course(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest","",true));
         when(courseRepository.findById(Mockito.any())).thenReturn(courseOptional);
         Course course = courseService.getCourse(Optional.of(BigDecimal.ONE));
         assertNotNull(course);

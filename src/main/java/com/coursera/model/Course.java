@@ -29,4 +29,6 @@ public class Course {
 
     private String link;
 
+    private Boolean active = true;
+
 }

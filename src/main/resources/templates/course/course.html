@@ -32,6 +32,17 @@
             <input class="form-control" id="link" type="url" placeholder="Link" th:field="*{link}">
             <label for="link">Link</label>
           </div>
+          <div class="form-floating m-3">
+            <select class="form-control" id="active" th:field="*{active}">
+              <option value="true">
+                Active
+              </option>
+              <option value="false">
+                Inactive
+              </option>
+            </select>
+            <label for="active">Please select if course is active or inactive</label>
+          </div>
           <button type="submit" class="btn btn-outline-success">Submit</button>
         </form>
       </div>
