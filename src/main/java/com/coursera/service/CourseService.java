@@ -6,6 +6,7 @@ import com.coursera.model.User;
 import com.coursera.model.UserCourseDtl;
 import com.coursera.repository.CourseRepository;
 import com.coursera.repository.UserCourseDtlRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class CourseService {
 
@@ -32,19 +34,29 @@ public class CourseService {
     }
 
     public List<Course> getCourses(){
-        return courseRepository.findAll();
+        log.debug("getCourses");
+        List<Course> all = courseRepository.findAll();
+        log.debug("getCourses ended");
+        return all;
     }
 
     public Course saveCourse(Course course) {
-        return courseRepository.save(course);
+        log.debug("saveCourse with :: {}",course);
+        Course save = courseRepository.save(course);
+        log.debug("saveCourse ended with :: {}",save);
+        return save;
     }
 
     public Course getCourse(Optional<BigDecimal> id) {
-        return courseRepository.findById(id.orElseThrow(IllegalArgumentException::new))
-                .orElseThrow(() -> new CourseNotFoundException("Course not found with "+id.get()));
+        log.debug("getCourse with :: {}",id);
+        Course course = courseRepository.findById(id.orElseThrow(IllegalArgumentException::new))
+                .orElseThrow(() -> new CourseNotFoundException("Course not found with " + id.get()));
+        log.debug("getCourse ended with :: {}",course);
+        return course;
     }
 
     public void enrollCourse(String userName, Optional<BigDecimal> id) {
+        log.debug("enrollCourse with :: {} ,{}",userName,id);
         User user = userService.getUser(userName);
         Course course = getCourse(id);
         UserCourseDtl userCourseDtl =
@@ -55,6 +67,9 @@ public class CourseService {
             userCourseDtl.setUserId(user.getId());
             userCourseDtl.setEnrollmentDate(new Date());
             userCourseDtlRepository.save(userCourseDtl);
+            log.debug("enrollCourse :: courseEnrolled successfully");
         }
+        log.debug("enrollCourse ended");
+
     }
 }
