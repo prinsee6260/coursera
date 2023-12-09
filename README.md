@@ -2,6 +2,9 @@
 
 Welcome to the Coursera Application! This platform is designed to facilitate online learning where students can enroll in courses and administrators can manage both students and courses effectively.
 
+## Latest Build Status
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/i-am-vaibhav/coursera/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/i-am-vaibhav/coursera/tree/main)
+
 ## Features
 
 ### For Students:
