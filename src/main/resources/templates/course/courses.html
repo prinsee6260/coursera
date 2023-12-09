@@ -16,7 +16,11 @@
              <div class="card bg-outline-primary" style="width: 18rem;">
                  <div class="card-body">
                      <button class="btn" type="button" data-bs-toggle="offcanvas" th:data-bs-target="${'#collapse'+i.index}" th:aria-controls="${'collapse'+i.index}">
-                         <p class="text-start card-title" th:text="${course.name}">Card title</p>
+                         <div class="d-flex">
+                         <p class="text-start card-title" th:text="${course.name}">Card titlle
+                         </p>
+                         <i  th:style="${course.active} ? 'font-size:20px;color : green' : 'font-size:20px;color : red'" th:class="${course.active} ? 'mx-1 fa-regular fa-thumbs-up' : 'mx-1 mt-1 fa-regular fa-thumbs-down'" sec:authorize="hasAuthority('ROLE_ADMIN')"></i>
+                         </div>
                          <p class="text-start card-subtitle text-muted" th:text="${course.category}">Card subtitle</p>
                      </button>
                      <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" th:id="${'collapse'+i.index}" aria-labelledby="offcanvasWithBothOptionsLabel">
