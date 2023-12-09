@@ -4,7 +4,7 @@ import com.coursera.exception.CourseNotFoundException;
 import com.coursera.model.Course;
 import com.coursera.model.User;
 import com.coursera.repository.CourseRepository;
-import com.coursera.repository.UserRepository;
+import com.coursera.security.AuthenticatedUser;
 import com.coursera.util.Role;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -33,16 +32,35 @@ class CourseServiceTest {
 
     @Test
     void getCourses() {
-        List<Course> courses = courseService.getCourses();
+        AuthenticatedUser user = new AuthenticatedUser(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.STUDENT));
+        List<Course> courses = courseService.getCourses(user);
+        assertNotNull(courses);
+    }
+
+    @Test
+    void getCoursesAdmin() {
+        AuthenticatedUser user = new AuthenticatedUser(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.ADMIN));
+        List<Course> courses = courseService.getCourses(user);
         assertNotNull(courses);
     }
 
     @Test
     void getCoursesWithData() {
+        AuthenticatedUser user = new AuthenticatedUser(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.STUDENT));
+        List<Course> expected = new ArrayList<>();
+        expected.add(new Course());
+        when(courseRepository.findByActiveTrue()).thenReturn(expected);
+        List<Course> courses = courseService.getCourses(user);
+        assertIterableEquals(expected,courses);
+    }
+
+    @Test
+    void getCoursesWithDataAdmin() {
+        AuthenticatedUser user = new AuthenticatedUser(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.ADMIN));
         List<Course> expected = new ArrayList<>();
         expected.add(new Course());
         when(courseRepository.findAll()).thenReturn(expected);
-        List<Course> courses = courseService.getCourses();
+        List<Course> courses = courseService.getCourses(user);
         assertIterableEquals(expected,courses);
     }
 

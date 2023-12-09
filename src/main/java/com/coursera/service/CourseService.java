@@ -6,16 +6,11 @@ import com.coursera.model.User;
 import com.coursera.model.UserCourseDtl;
 import com.coursera.repository.CourseRepository;
 import com.coursera.repository.UserCourseDtlRepository;
-import com.coursera.security.AuthenticatedUser;
 import com.coursera.util.Role;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -36,11 +31,10 @@ public class CourseService {
         this.userService = userService;
     }
 
-    public List<Course> getCourses(){
+    public List<Course> getCourses(org.springframework.security.core.userdetails.User user){
         log.debug("getCourses");
         List<Course> courseList = null;
-        AuthenticatedUser user = (AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(user.getUser().getRole().equals(Role.STUDENT)){
+        if(user!=null && user.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_STUDENT"))){
             courseList = courseRepository.findByActiveTrue();
         }else {
             courseList = courseRepository.findAll();

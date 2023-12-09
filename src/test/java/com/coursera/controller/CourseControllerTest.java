@@ -2,15 +2,21 @@ package com.coursera.controller;
 
 import com.coursera.exception.CourseNotFoundException;
 import com.coursera.model.Course;
+import com.coursera.model.User;
+import com.coursera.security.AuthenticatedUser;
 import com.coursera.service.CourseService;
+import com.coursera.util.Role;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.event.annotation.PrepareTestInstance;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -42,11 +48,11 @@ class CourseControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "Vaibhav")
     void getCoursesPageWithData() throws Exception {
+        AuthenticatedUser user = new AuthenticatedUser(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.ADMIN));
         List<Course> expectedCourses = new ArrayList<>();
         expectedCourses.add(new Course(BigDecimal.ONE, "Category 1", "Course 1", "Description 1",null,true));
-        BDDMockito.given(courseService.getCourses()).willReturn(expectedCourses);
+        BDDMockito.given(courseService.getCourses(user)).willReturn(expectedCourses);
         MvcResult courses = mockMvc.perform(MockMvcRequestBuilders.get("/courses"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists(

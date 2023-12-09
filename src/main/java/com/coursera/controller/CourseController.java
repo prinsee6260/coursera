@@ -1,11 +1,12 @@
 package com.coursera.controller;
 
 import com.coursera.model.Course;
-import com.coursera.model.User;
+import com.coursera.security.AuthenticatedUser;
 import com.coursera.service.CourseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,8 @@ public class CourseController {
     @Secured({"ROLE_STUDENT","ROLE_ADMIN"})
     public String getCoursesPage(Model model){
         log.debug("getCoursesPage started");
-        model.addAttribute("courses",courseService.getCourses());
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("courses",courseService.getCourses(user));
         return COURSE_FOLDER + "courses";
     }
 
