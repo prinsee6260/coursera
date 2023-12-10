@@ -77,8 +77,10 @@ public class CourseService {
     }
 
     public void activateCourse(Optional<BigDecimal> id) {
+        log.debug("activateCourse started with :: {}",id);
         Course course = getCourse(id);
         course.setActive(!course.getActive());
         courseRepository.save(course);
+        log.debug("activateCourse ended");
     }
 }

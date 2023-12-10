@@ -47,7 +47,6 @@ public class CourseController {
     @GetMapping("/{id}/update")
     public String getCoursesUpdatePage(Model model,
                                        @PathVariable Optional<BigDecimal> id){
-
         log.debug("getCoursesUpdatePage started");
         model.addAttribute("course",courseService.getCourse(id));
         return COURSE_FOLDER + "course";
@@ -71,6 +70,7 @@ public class CourseController {
 
     @GetMapping("/{id}/activate")
     public String activateCourse(Model model,@PathVariable Optional<BigDecimal> id){
+        log.debug("activateCourse started");
         courseService.activateCourse(id);
         return "redirect:/courses";
     }
