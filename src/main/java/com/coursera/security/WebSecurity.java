@@ -6,6 +6,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -36,8 +39,21 @@ public class WebSecurity {
                 .failureForwardUrl("/login?error")
                 .defaultSuccessUrl("/home",true);
 
+        // setting maximum user sessions and registry
+        http.sessionManagement().maximumSessions(1).maxSessionsPreventsLogin(true)
+                .sessionRegistry(sessionRegistry()).expiredUrl("/login");
+
+        // setting the session policy
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS).sessionFixation()
+                .migrateSession();
+
         return http.build();
 
+    }
+
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 
     @Bean
