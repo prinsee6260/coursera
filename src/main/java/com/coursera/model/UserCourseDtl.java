@@ -26,6 +26,9 @@ public class UserCourseDtl {
     private BigDecimal courseId;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date enrollmentDate;
+    private Date enrollmentStartDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date enrollmentEndDate;
 
 }

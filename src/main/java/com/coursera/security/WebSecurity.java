@@ -29,7 +29,7 @@ public class WebSecurity {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // telling security to don't check the below urls
-        http.authorizeRequests().mvcMatchers("/login","/authenticate","*/h2-console/**","/h2-console").permitAll();
+        http.authorizeRequests().mvcMatchers("/login","/authenticate","/actuator","*/h2-console/**","/h2-console","/actuator/**").permitAll();
 
         // telling to check all urls
         http.authorizeRequests().anyRequest().authenticated();
@@ -58,7 +58,7 @@ public class WebSecurity {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers(new AntPathRequestMatcher("/h2-console/**"));
+        return (web) -> web.ignoring().requestMatchers(new AntPathRequestMatcher("*/h2-console/**"));
     }
 
     @Bean
