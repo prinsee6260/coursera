@@ -11,6 +11,8 @@ import com.coursera.vo.StudentEnrollments;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,8 +43,16 @@ public class EnrollmentService {
         User user = userService.getUser(name);
         List<UserCourseDtl> userCourseDtlList = userCourseDtlRepository.findByUserId(user.getId());
         if(userCourseDtlList.isEmpty())
-            throw new CourseNotFoundException("Enrolled Courses not found with user name : "+name);
+            return Collections.emptyList();
         List<BigDecimal> courseIdList = userCourseDtlList.stream().map(UserCourseDtl::getCourseId).collect(Collectors.toList());
         return courseRepository.findAllById(courseIdList);
+    }
+
+    public void disenrollCourse(String userName, Optional<BigDecimal> id) {
+        User user = userService.getUser(userName);
+        UserCourseDtl userCourseDtl = userCourseDtlRepository
+                .findByUserIdAndCourseId(user.getId(),id.orElseThrow(IllegalArgumentException::new))
+                .orElseThrow(() -> new CourseNotFoundException("\"Enrolled Course not found with id "+id));
+        userCourseDtlRepository.delete(userCourseDtl);
     }
 }
