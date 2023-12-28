@@ -11,9 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -24,6 +24,9 @@ public class CourseService {
     private final UserCourseDtlRepository userCourseDtlRepository;
 
     private final UserService userService;
+
+
+    private final static ZoneOffset IST = ZoneOffset.ofHoursMinutes(5, 30);
 
     public CourseService(CourseRepository userRepository, UserCourseDtlRepository userCourseDtlRepository, UserService userService) {
         this.courseRepository = userRepository;
@@ -68,17 +71,20 @@ public class CourseService {
         if (userCourseDtl.getId() == null) {
             userCourseDtl.setCourseId(course.getId());
             userCourseDtl.setUserId(user.getId());
-            userCourseDtl.setEnrollmentDate(new Date());
+            userCourseDtl.setEnrollmentStartDate(new Date());
+            LocalDateTime time = LocalDateTime.now().plusYears(10);
+            userCourseDtl.setEnrollmentEndDate(new Date(time.toInstant(IST).toEpochMilli()));
             userCourseDtlRepository.save(userCourseDtl);
             log.debug("enrollCourse :: courseEnrolled successfully");
         }
         log.debug("enrollCourse ended");
-
     }
 
     public void activateCourse(Optional<BigDecimal> id) {
+        log.debug("activateCourse started with :: {}",id);
         Course course = getCourse(id);
         course.setActive(!course.getActive());
         courseRepository.save(course);
+        log.debug("activateCourse ended");
     }
 }
