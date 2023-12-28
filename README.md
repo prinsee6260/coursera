@@ -62,7 +62,7 @@ Please adhere to the code of conduct and follow the contribution guidelines.
 
 ## Support
 
-For any inquiries, issues, or suggestions, please contact us at vgworks566556@gmail.com
+For any inquiries, issues, or suggestions, please contact us at prinseegupta23@gmail.com
 
 ---
 
